@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Primo Paupérrimo — Investimentos</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;color:#17212b}
+header{background:#102a43;color:white;padding:22px 18px} header h1{margin:0 0 6px;font-size:25px} header p{margin:0;opacity:.85}
+main{max-width:900px;margin:auto;padding:16px}.card{background:white;border-radius:14px;padding:18px;margin:12px 0;box-shadow:0 2px 10px #00000012}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}.metric{padding:14px;border:1px solid #e4e8ec;border-radius:12px}.metric b{display:block;font-size:22px;margin-top:5px}
+label{font-weight:bold;font-size:14px;display:block;margin:10px 0 5px}input,select{width:100%;padding:12px;border:1px solid #ccd3da;border-radius:9px;font-size:16px}
+button{border:0;border-radius:10px;padding:12px 16px;font-size:15px;font-weight:bold;cursor:pointer;background:#147d64;color:white;margin-top:10px}
+button.secondary{background:#e8eef3;color:#17212b}.decision{padding:16px;border-radius:12px;background:#edf8f4;border-left:6px solid #147d64}.decision h2{margin:0 0 8px}
+table{width:100%;border-collapse:collapse;margin-top:10px}th,td{text-align:left;padding:10px;border-bottom:1px solid #e5e8eb;font-size:14px}
+small,.muted{color:#667781}.warn{background:#fff8e6;border-left:6px solid #d99a00;padding:12px;border-radius:10px}
+.progress{height:13px;background:#e3e8ed;border-radius:20px;overflow:hidden}.bar{height:100%;background:#147d64;width:0}
+footer{text-align:center;color:#71808c;font-size:12px;padding:25px}
+</style>
+</head>
+<body>
+<header><h1>Primo Paupérrimo</h1><p>Investimentos para quem começa com pouco — com disciplina e análise de cenário.</p></header>
+<main>
+<section class="card">
+<h2>Meu ponto de partida</h2>
+<div class="grid">
+<div><label>Valor inicial (R$)</label><input id="initial" type="number" value="50" min="0" step="0.01"></div>
+<div><label>Aporte mensal (R$)</label><input id="monthly" type="number" value="50" min="0" step="0.01"></div>
+<div><label>Meta patrimonial (R$)</label><input id="goal" type="number" value="100000" min="1" step="100"></div>
+</div>
+<button onclick="update()">Atualizar</button>
+</section>
+
+<section class="card">
+<h2>Painel</h2>
+<div class="grid">
+<div class="metric">Capital inicial<b id="mInitial">R$ 50,00</b></div>
+<div class="metric">Aporte mensal<b id="mMonthly">R$ 50,00</b></div>
+<div class="metric">Aportes em 12 meses<b id="mYear">R$ 600,00</b></div>
+<div class="metric">Meta<b id="mGoal">R$ 100.000,00</b></div>
+</div>
+<p class="muted">A carteira ainda não conhece seus investimentos reais. Registre-os na próxima etapa.</p>
+</section>
+
+<section class="card">
+<h2>🧠 Análise de hoje</h2>
+<div class="decision">
+<h2 id="decision">🟢 APORTAR — RENDA FIXA</h2>
+<p id="reason">Com patrimônio inicial pequeno, a prioridade é liquidez, segurança e aproveitamento dos juros. Não compre uma ação apenas para “ter uma ação”.</p>
+</div>
+<div class="warn"><b>Importante:</b> esta V1 é um protótipo educacional. Ela não executa ordens e não substitui uma recomendação profissional. Dados de mercado ainda precisam ser conectados a fontes em tempo real.</div>
+</section>
+
+<section class="card">
+<h2>📊 Cenário que o algoritmo deverá acompanhar</h2>
+<table><tr><th>Indicador</th><th>Uso no algoritmo</th><th>Status V1</th></tr>
+<tr><td>Selic / CDI</td><td>Medir atratividade da renda fixa</td><td>Manual</td></tr>
+<tr><td>IPCA</td><td>Medir retorno real</td><td>Manual</td></tr>
+<tr><td>Focus</td><td>Expectativas de juros e inflação</td><td>Manual</td></tr>
+<tr><td>DI futuro</td><td>Expectativa de juros</td><td>Manual</td></tr>
+<tr><td>Ibovespa / IFIX</td><td>Risco e oportunidades</td><td>Manual</td></tr>
+<tr><td>Dólar</td><td>Risco macroeconômico</td><td>Manual</td></tr>
+</table>
+</section>
+
+<section class="card">
+<h2>🏦 Regra inicial de alocação</h2>
+<table>
+<tr><th>Destino</th><th>Percentual</th><th>Com R$50</th></tr>
+<tr><td>Renda fixa líquida</td><td>80%</td><td>R$40</td></tr>
+<tr><td>Reserva para oportunidade</td><td>20%</td><td>R$10</td></tr>
+</table>
+<p class="muted">O valor de oportunidade pode ser acumulado até fazer sentido comprar um ETF/FII/ação. Não existe obrigação de comprar todo mês.</p>
+</section>
+
+<section class="card">
+<h2>📈 Projeção matemática</h2>
+<p class="muted">Hipótese editável de 10% ao ano. Não é promessa de rentabilidade e não considera impostos/custos.</p>
+<label>Rentabilidade anual hipotética (%)</label>
+<input id="rate" type="number" value="10" step="0.1">
+<button class="secondary" onclick="projection()">Calcular</button>
+<table id="proj"></table>
+</section>
+
+<section class="card">
+<h2>🎯 Progresso até R$100 mil</h2>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<p id="progressText">0,05% da meta</p>
+</section>
+
+<section class="card">
+<h2>🏪 Onde operar?</h2>
+<p>A plataforma deve comparar instituições e produtos, em vez de assumir que um banco é sempre melhor.</p>
+<table>
+<tr><th>Opção</th><th>O que procurar</th></tr>
+<tr><td>Banco do Brasil</td><td>Tesouro, CDB e outros investimentos disponíveis no app; verificar custos e taxas do produto.</td></tr>
+<tr><td>Corretoras/fintechs</td><td>Comparar taxa de corretagem, custódia, CDBs/LCIs/LCAs disponíveis e facilidade de investir valores pequenos.</td></tr>
+<tr><td>Tesouro Direto</td><td>Comparar diretamente títulos públicos e custos aplicáveis.</td></tr>
+</table>
+<p class="muted">Isenção de IR depende do produto e das regras vigentes; não considerar “fintech sem IR” como regra geral.</p>
+</section>
+
+<section class="card">
+<h2>🔜 Próxima versão</h2>
+<ul>
+<li>Conectar dados reais de Selic, CDI, IPCA e Focus.</li>
+<li>Comparar rentabilidade líquida entre CDB, LCI/LCA e Tesouro.</li>
+<li>Criar cadastro da carteira e histórico de aportes.</li>
+<li>Gerar uma decisão diária: APORTAR / MANTER / AGUARDAR / REAVALIAR.</li>
+<li>Criar alertas quando o cenário mudar.</li>
+</ul>
+</section>
+</main>
+<footer>Agente R$50 — protótipo pessoal de educação e acompanhamento de investimentos.</footer>
+
+<script>
+const money=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+function update(){
+ const i=+document.getElementById('initial').value||0, m=+document.getElementById('monthly').value||0, g=+document.getElementById('goal').value||1;
+ document.getElementById('mInitial').textContent=money(i);
+ document.getElementById('mMonthly').textContent=money(m);
+ document.getElementById('mYear').textContent=money(m*12);
+ document.getElementById('mGoal').textContent=money(g);
+ const pct=Math.min(100,(i/g)*100);
+ document.getElementById('bar').style.width=pct+'%';
+ document.getElementById('progressText').textContent=pct.toFixed(2).replace('.',',')+'% da meta';
+ projection();
+}
+function projection(){
+ const i=+document.getElementById('initial').value||0,m=+document.getElementById('monthly').value||0,r=(+document.getElementById('rate').value||0)/100;
+ const table=document.getElementById('proj');
+ let h='<tr><th>Prazo</th><th>Aportes</th><th>Valor projetado</th></tr>';
+ [1,5,10,15,20,25,30].forEach(y=>{
+   let v=i; for(let k=0;k<y*12;k++) v=v*(1+r)**(1/12)+m;
+   h+=`<tr><td>${y} ano${y>1?'s':''}</td><td>${money(i+m*y*12)}</td><td><b>${money(v)}</b></td></tr>`;
+ });
+ table.innerHTML=h;
+}
+update();
+</script>
+</body>
+</html>
